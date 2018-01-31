@@ -23,7 +23,7 @@ def schema():
 fields = ["-"] *9 #List of fields
 
 def refresh_board():
-    clear()
+    os.system('clear')
     board = "\n"+ sep.join(fields[6:9]) +"\n\n"+ sep.join(fields[3:6]) +"\n\n"+ sep.join(fields[0:3]) +"\n"
     return board
 
