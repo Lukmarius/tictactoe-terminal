@@ -10,6 +10,40 @@ from time import sleep
 def clear(): return os.system('clear')
 
 
+def red(name):
+    print ("\033[91m {}\033[00m" .format(name))
+
+
+def yellow(name):
+    print ("\033[93m {}\033[0m" .format(name))
+
+
+def menu():
+    red("          ||||||||      ||       |||||||")
+    red("             ||         ||       ||       ")
+    red("             ||         ||       ||       ")
+    red("             ||         ||       |||||||\n")
+    red("          ||||||||    |||||||    |||||||")
+    red("             ||       ||   ||    ||       ")
+    red("             ||       |||||||    ||       ")
+    red("             ||       ||   ||    ||||||| \n")
+    red("          ||||||||    |||||||    |||||||")
+    red("             ||       ||   ||    ||--- ")
+    red("             ||       ||   ||    ||--- ")
+    red("             ||       |||||||    |||||||\n")
+    yellow("          Welcome to the Tic Tac Toe game!\n          Please select one of the following:")
+    yellow("         'M' for Multiplayer (2 players)\n          'S' for Singleplayer (vs AI)\n          'R' for rules\n          'E' to exit")
+
+
+def rules():
+    print("The goal is to get 3 symbols in a row.\n" 
+    "Each person must switch taking turns, first X, then O.\n" 
+    "Players must use the board given to them,\n" 
+    "they cannot add extra sides on to the board.\n"
+    "In order to win, the 3 letters must all connect\n"
+    "in a straight line in one direction, up or down, \nleft or right, or diagonally.")
+
+
 a = ["7", "8", "9"]
 b = ["4", "5", "6"]
 c = ["1", "2", "3"]
@@ -30,14 +64,14 @@ keyfields = [[2, 7, 2],
              [3, 6, 1],
              [0, 3, 1]]
 
-sep = "   "
+sep = "        "
 
 
 def refresh_board():
     clear()  # clearing terminal
-    board = ("\n" + sep.join(fields[6:9]) + "\n\n" +
-             sep.join(fields[3:6]) + "\n\n" +
-             sep.join(fields[0:3]) + "\n")
+    board = ("\n\n" + sep*2 + sep.join(fields[6:9]) + "\n\n\n\n" +
+                      sep*2 + sep.join(fields[3:6]) + "\n\n\n\n" +
+                      sep*2 + sep.join(fields[0:3]) + "\n\n")
     return board
 
 
@@ -52,11 +86,10 @@ def schema():
 def ask_player(xo):
     while True:
         try:
-            num = int(
-                input(
-                    "Player " +
-                    xo +
-                    " use numerical keyboard as coordinates: "))
+            num = int(input(
+                            "   Player " + xo +
+                            " use numerical keyboard as coordinates:\n "
+                            + sep*3))
             break
         except ValueError:
             print("Please make sure to enter a number")
@@ -127,24 +160,43 @@ def check_balanced_fields(start, stop, step, fields, xo):
     return -1
 
 
+def check_else_fields(start, stop, step, fields, xo):
+    if fields[start:stop:step].count('-') >= 1:
+        if fields[start:stop:step].count(xo) >= 1:
+            if fields[start] == '-':
+                return start
+            if fields[start + step] == '-':
+                return start + step
+            if fields[stop - 1] == '-':
+                return stop - 1
+        return -1
+    return -1
+
+
 def target_f(keyfields, fields, xo):
 
     for [start, stop, step] in keyfields:
         f = check_attack_fields(start, stop, step, fields, xo)
         if f > -1:
-            '''print('attack')'''
+            '''attack'''
             return f
 
     for [start, stop, step] in keyfields:
         f = check_defend_fields(start, stop, step, fields, xo)
         if f > -1:
-            '''print('defend')'''
+            '''defend'''
             return f
 
     for [start, stop, step] in keyfields:
         f = check_balanced_fields(start, stop, step, fields, xo)
         if f > -1:
-            '''print('balanced tactic')'''
+            '''balanced tactic'''
+            return f
+
+    for [start, stop, step] in keyfields:
+        f = check_else_fields(start, stop, step, fields, xo)
+        if f > -1:
+            '''tactic for else cases'''
             return f
 
     if f == -1:
@@ -152,16 +204,18 @@ def target_f(keyfields, fields, xo):
         sys.exit
 
 
-def AI_put(xo):  # Function of putting "X" or "O" by computer
+def AI_put(xo, level):  # Function of putting "X" or "O" by computer
+
     if fields.count(xo) == 0:  # if there is no AI symbols on board
-        target = 4  # target = index of field
-        if fields[target] != "-":
-            target = random.choice([0, 2, 6, 8])
-        print(str(target) + ' for 0')
+        if level == 'y':  # if hard level is choosen
+            target = 4  # target = index of field
+        else:  # lower level
+            target = random.randrange(1, 9, 2)
+            while fields[target] != "-":
+                target = random.randrange(1, 9, 2)
 
     else:  # if there are more than 1 AI symbols on board
         target = target_f(keyfields, fields, xo)
-        print(str(target) + ' for else')
 
     fields[target] = xo  # put symbol into index - target
 
@@ -246,7 +300,7 @@ def singleplayer():
 
                 # Computer moves:
                 sleep(2)
-                aistate = AI_put("O")
+                aistate = AI_put("O", level)
                 if aistate == 2:
                     break
 
@@ -255,7 +309,7 @@ def singleplayer():
             while state != 2 or aistate != 2:
                 # Computer moves:
                 sleep(2)
-                aistate = AI_put("X")
+                aistate = AI_put("X", level)
                 if aistate == 2:
                     break
 
@@ -275,26 +329,26 @@ def singleplayer():
             print("Please enter 1 to play first and 2 to play second")
         break
 
-
 ##############################  Main Code  ###############################
 
+
+clear()
+menu()
 while True:
 
-    print(schema())
-
-    menu1 = (
-        input(
-            "Press 'm' to choose Multiplayer (2 players) "
-            "or \n 's' for Singleplayer (vs computer) or 'e' to close game: ")).lower()
+    choice = (input()).lower()
 
     # choosing the game mode:
-    if menu1 == "m":
+    if choice == "m":
         multiplayer()
         break
-    elif menu1 == "s":
+    elif choice == "s":
+        level = input('Do you want to choose level hard? [y/n] ').lower()  # choosing the level
         singleplayer()
         break
-    elif menu1 == "e":
+    elif choice == "r":
+        rules()
+    elif choice == "e":
         sys.exit()  # closing game
     else:
         print("Make sure to enter 'm' for Multiplayer, 's' for Singleplayer, 'e' to exit ")
