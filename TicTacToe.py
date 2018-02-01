@@ -339,16 +339,23 @@ while True:
     choice = (input()).lower()
 
     # choosing the game mode:
-    if choice == "m":
+    if choice == "m":  # multiplayer choosen
         multiplayer()
         break
-    elif choice == "s":
+
+    elif choice == "s":  # singleplayer choosen
         level = input('Do you want to choose level hard? [y/n] ').lower()  # choosing the level
+        while level != 'y' or level != 'n':
+            level = input('Please enter the letter y or n!\n').lower()
+            if level == 'y' or level == 'n':
+                break
         singleplayer()
         break
-    elif choice == "r":
+
+    elif choice == "r":  # show rules
         rules()
-    elif choice == "e":
-        sys.exit()  # closing game
+
+    elif choice == "e":  # closing game
+        sys.exit()  
     else:
         print("Make sure to enter 'm' for Multiplayer, 's' for Singleplayer, 'e' to exit ")
