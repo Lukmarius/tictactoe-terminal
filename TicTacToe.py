@@ -60,34 +60,101 @@ def put(xo, num): # Function of putting "X" or "O" by users
         print("Choose another location!\n ")
         return 1
 
-def target_f(fields):
-    if fields[0:7:3].count(xo) == 2: 
+def check_attack_fields(start, stop, step, fields, xo):
+    if fields[start:stop:step].count('-') == 1: 
+        if fields[start:stop:step].count(xo) == 2:
+            if fields[start] == '-':
+                return start
+            if fields[start + step] == '-':
+                return start + step
+            if fields[stop-1] == '-':
+                return stop - 1
+        return -1
+    return -1
+
+def check_defend_fields(start, stop, step, fields, xo):
+    if fields[start:stop:step].count('-') == 1: 
+        if fields[start] == '-':
+            return start
+        if fields[start + step] == '-':
+            return start + step
+        if fields[stop - 1] == '-':
+            return stop - 1
+    return -1
+
+def target_f(fields, xo):
+    f = check_attack_fields(2, 7, 2, fields, xo)
+    if check_attack_fields(2, 7, 2, fields, xo) > -1:
+        print(check_attack_fields(2, 7, 2, fields, xo))
+        return check_attack_fields(2, 7, 2, fields, xo)
+
+    elif check_attack_fields(0, 9, 4, fields, xo) > -1:
+        print(check_attack_fields(0, 9, 4, fields, xo))
+        return check_attack_fields(0, 9, 4, fields, xo)
+
+    elif check_attack_fields(0, 7, 3, fields, xo) > -1:
+        print(check_attack_fields(0, 7, 3, fields, xo))
+        return check_attack_fields(0, 7, 3)
+
+    elif check_attack_fields(1, 8, 3, fields, xo) > -1:
+        print(check_attack_fields(1, 8, 3, fields, xo))
+        return check_attack_fields(1, 8, 3, fields, xo)
+
+    elif check_attack_fields(2, 9, 3, fields, xo) > -1:
+        print(check_attack_fields(2, 9, 3, fields, xo))
+        return check_attack_fields(2, 9, 3, fields, xo)
+
+    elif check_attack_fields(6, 9, 1, fields, xo) > -1:
+        print(check_attack_fields(6, 9, 1, fields, xo))
+        return check_attack_fields(6, 9, 1, fields, xo)
+
+    elif check_attack_fields(3, 6, 1, fields, xo) > -1:
+        print(check_attack_fields(3, 6, 1, fields, xo))
+        return check_attack_fields(3, 6, 1, fields, xo)
+
+    elif check_attack_fields(0, 3, 1, fields, xo) > -1:
+        print(check_attack_fields(0, 3, 1, fields, xo))
+        return check_attack_fields(0, 3, 1, fields, xo)
         
-        return 
-    elif fields[1:8:3].count('-') == 1:
-        
-        return 
-    elif fields[2:9:3].count('-') == 1:
-        
-        return 
-    elif fields[2:7:2].count('-') == 1:
-        
-        return 
-    elif fields[0:9:4].count('-') == 1:
-       
-        return 
-    elif fields[0:3].count('-') == 1:
-        
-        return 
-    elif fields[3:6].count('-') == 1:
-        
-        return 
-    elif fields[6:9].count('-') == 1:
-        
-        return 
+    # for defending tactic if win is not possible:
+    elif check_defend_fields(2, 7, 2, fields, xo) > -1:
+        print(check_defend_fields(2, 7, 2, fields, xo))
+        return check_attack_fields(2, 7, 2, fields, xo)
+
+    elif check_defend_fields(0, 9, 4, fields, xo) > -1:
+        print(check_defend_fields(0, 9, 4, fields, xo))
+        return check_attack_fields(0, 9, 4, fields, xo)
+
+    elif check_defend_fields(0, 7, 3, fields, xo) > -1:
+        print(check_defend_fields(0, 7, 3, fields, xo))
+        return check_attack_fields(0, 7, 3, fields, xo)
+
+    elif check_defend_fields(1, 8, 3, fields, xo) > -1:
+        print(check_defend_fields(1, 8, 3, fields, xo))
+        return check_attack_fields(1, 8, 3, fields, xo)
+
+    elif check_defend_fields(2, 9, 3, fields, xo) > -1:
+        print(check_defend_fields(2, 9, 3, fields, xo))
+        return check_attack_fields(2, 9, 3, fields, xo)
+
+    elif check_defend_fields(6, 9, 1, fields, xo) > -1:
+        print(check_defend_fields(6, 9, 1, fields, xo))
+        return check_attack_fields(6, 9, 1, fields, xo)
+
+    elif check_defend_fields(3, 6, 1, fields, xo) > -1:
+        print(check_defend_fields(3, 6, 1, fields, xo))
+        return check_attack_fields(3, 6, 1, fields, xo)
+
+    elif check_defend_fields(0, 3, 1, fields, xo) > -1:
+        print(check_defend_fields(0, 3, 1, fields, xo))
+        return check_attack_fields(0, 3, 1, fields, xo)
+
     else: # ostateczność
         print('target_f else: ')
-        return random.randrange(0,9)
+        target = random.randrange(0,9)
+        while fields[target] != "-":
+            target = random.randrange(0,9)
+        return target
     
 
 
@@ -96,7 +163,7 @@ def AI_put(xo): # Function of putting "X" or "O" by computer
         target = 4
         if fields[target] != "-":
             target = random.choice([0, 2, 6, 8])
-        print(str(target) + ' first')
+        print(str(target) + ' for 0')
 
     elif fields.count(xo) == 1:  # if there is 1 AI symbol on board
         target = random.choice([0, 2, 6, 8])
@@ -104,20 +171,20 @@ def AI_put(xo): # Function of putting "X" or "O" by computer
             target = random.choice([0, 2, 6, 8])
         print(str(target) + ' for 1')
 
-    elif fields.count(xo) == 2:  # if there is 2 AI symbols on board
-        target = target_f(fields)
-        print(str(target) + ' for 2')
-
     else:
-        target = target_f(fields)
+        target = target_f(fields, xo)
         print(str(target) + ' for else')
+
+    
     fields[target] = xo # put symbol into index - target
 
-    if (fields[0:3].count(xo) == 3 or fields[3:6].count(xo) == 3 or fields[6:9].count(xo) == 3
+    if (fields[0:3].count(xo) == 3 
+    or fields[3:6].count(xo) == 3 
+    or fields[6:9].count(xo) == 3
     or (fields[0:7:3].count(xo) == 3)
     or (fields[1:8:3].count(xo) == 3)
     or (fields[2:9:3].count(xo) == 3)
-    or (fields[2:5:2].count(xo) == 3)
+    or (fields[2:7:2].count(xo) == 3)
     or (fields[0:9:4].count(xo) == 3)):
         print(refresh_board())
         print("User " + xo + " won!")
