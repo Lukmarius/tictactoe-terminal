@@ -188,8 +188,9 @@ def target_f(keyfields, fields, xo):
             return f
 
     if f == -1:
-        print('wrong algorithm')
-        sys.exit
+        f = random.randrange(0,9)
+        print('error of game')
+        return sys.exit
 
 
 def AI_put(xo, level, fields):  # Function of putting "X" or "O" by computer
@@ -198,7 +199,7 @@ def AI_put(xo, level, fields):  # Function of putting "X" or "O" by computer
         if level == 'y':  # if hard level is choosen
             target = 4  # target = index of field
             while fields[target] != "-":
-                target = random.randrange(1, 9, 2)
+                target = random.choice([0, 2, 6, 8])
         else:  # lower level
             target = random.randrange(1, 9, 2)
             while fields[target] != "-":
