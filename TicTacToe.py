@@ -197,6 +197,8 @@ def AI_put(xo, level, fields):  # Function of putting "X" or "O" by computer
     if fields.count(xo) == 0:  # if there is no AI symbols on board
         if level == 'y':  # if hard level is choosen
             target = 4  # target = index of field
+            while fields[target] != "-":
+                target = random.randrange(1, 9, 2)
         else:  # lower level
             target = random.randrange(1, 9, 2)
             while fields[target] != "-":
@@ -266,11 +268,11 @@ def singleplayer(level):
         while True:
             try:
                 menu2 = int(
-                    input("Do you want to be a first or second player? (1 or 2): "))
+                    input("      Do you want to be a first or second player? (1 or 2): "))
                 break
             except ValueError:
                 print(
-                    "PLease make sure to enter a number! 1 to start first, 2 to start second")
+                    "      PLease make sure to enter a number! 1 to start first, 2 to start second")
         if menu2 == 1:  # User starts as first
             print(refresh_board(fields))
             while state != 2:
@@ -314,7 +316,7 @@ def singleplayer(level):
                         break
 
         else:
-            print("Please enter 1 to play first and 2 to play second")
+            print("        Please enter 1 to play first and 2 to play second")
         break
 
 ##############################  Main Code  ###############################
@@ -332,9 +334,9 @@ while True:
         break
 
     elif choice == "s":  # singleplayer choosen
-        print('Do you want to play on the hard level or not? ')
+        print('      Do you want to play on the hard level or not? ')
         while True:  # choosing the level
-            level = input('Enter y or n\n').lower()
+            level = input('      Enter y or n\n').lower()
             if level == 'y' or level == 'n':
                 break
         singleplayer(level)
@@ -346,4 +348,4 @@ while True:
     elif choice == "e":  # closing game
         sys.exit()  
     else:
-        print("Make sure to enter 'm' for Multiplayer, 's' for Singleplayer, 'e' to exit ")
+        print("      Make sure to enter 'm' for Multiplayer, 's' for Singleplayer, 'e' to exit ")
