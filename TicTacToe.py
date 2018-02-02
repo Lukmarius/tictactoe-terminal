@@ -44,10 +44,6 @@ def rules():
     "in a straight line in one direction, up or down, \nleft or right, or diagonally.")
 
 
-a = ["7", "8", "9"]
-b = ["4", "5", "6"]
-c = ["1", "2", "3"]
-
 state = 0  # (state of the game) value of put(xo) for users
 aistate = 0  # (state of the game) value of AI_put(xo) for CPU, singleplayer mode
 
@@ -75,14 +71,6 @@ def refresh_board(fields):
     return board
 
 
-def schema(a, b, c):
-    schema = ("Schema of numerical keyboard \n" +
-              sep.join(a) + "\n\n" +
-              sep.join(b) + "\n\n" +
-              sep.join(c) + "\n")
-    return schema
-
-
 def ask_player(xo):
     while True:
         try:
@@ -100,7 +88,7 @@ def put(xo, num, fields):  # Function of putting "X" or "O" by users
     if fields[num - 1] == "-":
         fields[num - 1] = xo
         if fields.count("-") == 0:
-            print(refresh_board())
+            print(refresh_board(fields))
             print("\nDRAW!\n")
             return 2
         elif (fields[0:3].count(xo) == 3
@@ -111,10 +99,10 @@ def put(xo, num, fields):  # Function of putting "X" or "O" by users
               or (fields[2:9:3].count(xo) == 3)
               or (fields[2:7:2].count(xo) == 3)
               or (fields[0:9:4].count(xo) == 3)):
-            print(refresh_board())
+            print(refresh_board(fields))
             print("User " + xo + " won!\n")
             return 2
-        print(refresh_board())
+        print(refresh_board(fields))
         return 0
     else:
         print("Choose another location!\n ")
@@ -228,15 +216,15 @@ def AI_put(xo, level, fields):  # Function of putting "X" or "O" by computer
         or (fields[2:9:3].count(xo) == 3)
         or (fields[2:7:2].count(xo) == 3)
             or (fields[0:9:4].count(xo) == 3)):
-        print(refresh_board())
+        print(refresh_board(fields))
         print("User " + xo + " won!")
         return 2
     elif fields.count("-") == 0:
-        print(refresh_board())
+        print(refresh_board(fields))
         print("\nDRAW!\n")
         return 2
     else:
-        print(refresh_board())
+        print(refresh_board(fields))
         return 0
 
 # multiplayer:
@@ -344,9 +332,9 @@ while True:
         break
 
     elif choice == "s":  # singleplayer choosen
-        level = input('Do you want to choose level hard? [y/n] ').lower()  # choosing the level
-        while level != 'y' or level != 'n':
-            level = input('Please enter the letter y or n!\n').lower()
+        print('Do you want to play on the hard level or not? ')
+        while True:  # choosing the level
+            level = input('Enter y or n\n').lower()
             if level == 'y' or level == 'n':
                 break
         singleplayer(level)
