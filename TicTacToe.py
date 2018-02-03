@@ -89,7 +89,7 @@ def put(xo, num, fields):  # Function of putting "X" or "O" by users
         fields[num - 1] = xo
         if fields.count("-") == 0:
             print(refresh_board(fields))
-            print("\nDRAW!\n")
+            print("/n                       DRAW!\n")
             return 2
         elif (fields[0:3].count(xo) == 3
               or fields[3:6].count(xo) == 3
@@ -100,7 +100,7 @@ def put(xo, num, fields):  # Function of putting "X" or "O" by users
               or (fields[2:7:2].count(xo) == 3)
               or (fields[0:9:4].count(xo) == 3)):
             print(refresh_board(fields))
-            print("User " + xo + " won!\n")
+            print("                   User " + xo + " won!\n")
             return 2
         print(refresh_board(fields))
         return 0
@@ -220,11 +220,11 @@ def AI_put(xo, level, fields):  # Function of putting "X" or "O" by computer
         or (fields[2:7:2].count(xo) == 3)
             or (fields[0:9:4].count(xo) == 3)):
         print(refresh_board(fields))
-        print("User " + xo + " won!")
+        print("                  User " + xo + " won!")
         return 2
     elif fields.count("-") == 0:
         print(refresh_board(fields))
-        print("\nDRAW!\n")
+        print("\n                       DRAW!\n")
         return 2
     else:
         print(refresh_board(fields))
